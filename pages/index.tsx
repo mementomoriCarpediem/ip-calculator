@@ -1,23 +1,34 @@
 import { useEffect, useState } from 'react';
-import { Chip, Container, Divider, Stack, Typography } from '@mui/material';
+import {
+  Chip,
+  Container,
+  Divider,
+  Fab,
+  Stack,
+  Typography,
+} from '@mui/material';
 import type { NextPage } from 'next';
 import { InputField, RadioSelector, SingleSelector } from '../src/components';
+import CalculateResult, {
+  DRAWER_WIDTH,
+} from '../src/CalculateResult/CalculateResult';
+import { getTotalFee } from '../utils';
 
 type IPType = 'patent' | 'utility' | 'design' | 'trademark';
 type ProcessCategory = 'application' | 'register';
 type SubmitFormType = 'paper' | 'online';
 type Language = 'korean' | 'foriegn';
 
-interface States {
+export interface States {
   ipType: IPType | '';
   processCategory: ProcessCategory | '';
   submitFormType?: SubmitFormType;
   language?: Language;
   pageCount?: number;
-  isRequestForExamination?: boolean;
+  isRequestForExamination?: keyof typeof YES_OR_NO;
   claimCount?: number;
-  isPriorityExamination?: boolean;
-  isClaimForPriorityRight?: boolean;
+  isPriorityExamination?: keyof typeof YES_OR_NO;
+  isClaimForPriorityRight?: keyof typeof YES_OR_NO;
   claimForPriorityRightType?: SubmitFormType;
   claimForPriorityRightCount?: number;
 }
@@ -29,21 +40,33 @@ const Home: NextPage = () => {
     submitFormType: 'online',
     language: 'korean',
     pageCount: 20,
-    isRequestForExamination: true,
+    isRequestForExamination: 'yes',
     claimCount: 1,
-    isPriorityExamination: false,
+    isPriorityExamination: 'no',
+    isClaimForPriorityRight: 'no',
     claimForPriorityRightType: 'online',
     claimForPriorityRightCount: 1,
   });
 
+  const [isResultOpen, setIsResultOpen] = useState<boolean>(false);
+
+  const [calculatedResult, setCalculatedResult] = useState<number>(0);
+
   //TODO: delete after test
   useEffect(() => {
-    console.log(states);
+    console.log(1, states);
+  }, [calculatedResult, states]);
+
+  useEffect(() => {
+    setCalculatedResult(getTotalFee(states));
   }, [states]);
 
   return (
     <Container maxWidth="lg">
-      <Stack justifyContent={'center'}>
+      <Stack
+        justifyContent={'center'}
+        sx={{ mr: isResultOpen ? `${DRAWER_WIDTH}px` : 0 }}
+      >
         <Typography
           variant="h3"
           fontWeight={600}
@@ -167,7 +190,7 @@ const Home: NextPage = () => {
             setState={(
               claimForPriorityRightType: States['claimForPriorityRightType']
             ) => setStates({ ...states, claimForPriorityRightType })}
-            optionListMapper={SUBMIT_FORM_LANGUAGE}
+            optionListMapper={SUBMIT_FORM_TYPE_MAPPER}
             row
           />
           <InputField<States['claimForPriorityRightCount']>
@@ -180,6 +203,24 @@ const Home: NextPage = () => {
           />
         </Stack>
       </Stack>
+
+      {/* <Fab
+        variant="extended"
+        color="primary"
+        sx={{ left: '50%', bottom: 0, transform: 'translate(-50%)', mt: 5 }}
+        onClick={() => setCalculatedResult(getTotalFee(states))}
+      >
+        계산결과 확인
+      </Fab> */}
+
+      <Typography variant="h3" fontWeight="bold" textAlign="center" mt={10}>
+        총 금액: {calculatedResult?.toLocaleString()} 원
+      </Typography>
+
+      {/* <CalculateResult
+        open={isResultOpen}
+        onClose={() => setIsResultOpen(false)}
+      /> */}
     </Container>
   );
 };
@@ -208,4 +249,4 @@ const SUBMIT_FORM_LANGUAGE: Record<Language, string> = {
   foriegn: '외국어',
 };
 
-const YES_OR_NO = { true: 'Yes', false: 'No' };
+const YES_OR_NO = { yes: 'Yes', no: 'No' } as const;

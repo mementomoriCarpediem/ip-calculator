@@ -25,7 +25,7 @@ function RadioSelector<T>({
   return (
     <FormControl>
       <FormLabel id={`${title}-radio-buttons-group-label`}>{title}</FormLabel>
-      <RadioGroup<T>
+      <RadioGroup
         aria-labelledby={`${title}-radio-buttons-group-label`}
         name="row-radio-buttons-group"
         {...props}
