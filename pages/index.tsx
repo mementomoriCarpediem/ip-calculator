@@ -59,7 +59,7 @@ const Home: NextPage = () => {
         </Link> */}
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-          <SingleSelector<typeof states.ipType>
+          <SingleSelector<States['ipType']>
             title="지식재산권 선택"
             menuItemMapper={IP_TYPE_MAPPER}
             state={states.ipType}
@@ -82,7 +82,7 @@ const Home: NextPage = () => {
         </Divider>
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-          <RadioSelector<typeof states.submitFormType>
+          <RadioSelector<States['submitFormType']>
             title="서류제출 방법"
             state={states.submitFormType}
             setState={(submitFormType: States['submitFormType']) =>
@@ -92,7 +92,7 @@ const Home: NextPage = () => {
             row
           />
 
-          <RadioSelector<typeof states.language>
+          <RadioSelector<States['language']>
             title="제출서류 언어"
             state={states.language}
             setState={(language: States['language']) =>
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
           />
 
           {/* <Divider orientation="vertical" flexItem /> */}
-          <InputField<typeof states.pageCount>
+          <InputField<States['pageCount']>
             label={'페이지 수'}
             state={states.pageCount}
             setState={(pageCount: States['pageCount']) =>
@@ -118,7 +118,7 @@ const Home: NextPage = () => {
         </Divider>
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-          <RadioSelector<typeof states.isRequestForExamination>
+          <RadioSelector<States['isRequestForExamination']>
             title="심사청구 여부"
             state={states.isRequestForExamination}
             setState={(
@@ -127,7 +127,7 @@ const Home: NextPage = () => {
             optionListMapper={YES_OR_NO}
             row
           />
-          <InputField<typeof states.claimCount>
+          <InputField<States['claimCount']>
             label={'청구항 수'}
             state={states.claimCount}
             setState={(claimCount: States['claimCount']) =>
@@ -136,7 +136,7 @@ const Home: NextPage = () => {
             helperText="청구항 총 수"
           />
 
-          <RadioSelector<typeof states.isPriorityExamination>
+          <RadioSelector<States['isPriorityExamination']>
             title="우선심사 여부"
             state={states.isPriorityExamination}
             setState={(
@@ -152,7 +152,7 @@ const Home: NextPage = () => {
         </Divider>
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-          <RadioSelector<typeof states.isClaimForPriorityRight>
+          <RadioSelector<States['isClaimForPriorityRight']>
             title="우선권 주장 여부"
             state={states.isClaimForPriorityRight}
             setState={(
@@ -161,7 +161,7 @@ const Home: NextPage = () => {
             optionListMapper={YES_OR_NO}
             row
           />
-          <RadioSelector<typeof states.claimForPriorityRightType>
+          <RadioSelector<States['claimForPriorityRightType']>
             title="우선권주장 서류 제출 방식"
             state={states.claimForPriorityRightType}
             setState={(
@@ -170,7 +170,7 @@ const Home: NextPage = () => {
             optionListMapper={SUBMIT_FORM_LANGUAGE}
             row
           />
-          <InputField<typeof states.claimForPriorityRightCount>
+          <InputField<States['claimForPriorityRightCount']>
             label={'우선권 주장 수'}
             state={states.claimForPriorityRightCount}
             setState={(
