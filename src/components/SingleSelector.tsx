@@ -19,6 +19,7 @@ function SingleSelector<T>({
   menuItemMapper,
   state,
   setState,
+  ...props
 }: Props<T>) {
   return (
     <FormControl fullWidth>
@@ -29,6 +30,7 @@ function SingleSelector<T>({
         value={state}
         label={title}
         onChange={(e) => setState(e.target.value as T)}
+        {...props}
       >
         {Object.keys(menuItemMapper).map((key) => (
           <MenuItem key={key} value={key}>
