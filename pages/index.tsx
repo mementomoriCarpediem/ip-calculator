@@ -20,7 +20,8 @@ type IPType =
   | 'design-part-exam'
   | 'design-all-exam'
   | 'trademark';
-type ProcessCategory = 'application' | 'register';
+type ProcessCategory = 'application';
+// | 'register';
 type SubmitFormType = 'paper' | 'online';
 type Language = 'korean' | 'foriegn';
 
@@ -92,7 +93,7 @@ const Home: NextPage = () => {
           fontWeight={600}
           gutterBottom
           textAlign={'center'}
-          p={2}
+          p={5}
         >
           지식재산권 비용(관납료) 계산기
         </Typography>
@@ -295,6 +296,22 @@ const Home: NextPage = () => {
             </>
           )}
         </Stack>
+
+        {/* <Divider sx={{ my: 3 }}>
+          <Chip label="4 단계 - 감면사유" />
+        </Divider>
+
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
+          <RadioSelector<States['isClaimForPriorityRight']>
+            title="우선권 주장 여부"
+            state={states.isClaimForPriorityRight}
+            setState={(
+              isClaimForPriorityRight: States['isClaimForPriorityRight']
+            ) => setStates({ ...states, isClaimForPriorityRight })}
+            optionListMapper={YES_OR_NO}
+            row
+          />
+        </Stack> */}
       </Stack>
 
       {/* <Fab
@@ -330,7 +347,7 @@ const IP_TYPE_MAPPER: Record<IPType, string> = {
 
 const PROCESS_CATEGORY_MAPPER: Record<ProcessCategory, string> = {
   application: '출원',
-  register: '등록',
+  // register: '등록',
 };
 
 const SUBMIT_FORM_TYPE_MAPPER: Record<SubmitFormType, string> = {
