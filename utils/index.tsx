@@ -10,7 +10,7 @@ export const getTotalFee = (inputStates: States): number => {
     language,
     pageCount,
     isRequestForExamination,
-    claimCount,
+    rightUnitCount,
     isPriorityExamination,
     isClaimForPriorityRight,
     claimForPriorityRightType,
@@ -19,6 +19,9 @@ export const getTotalFee = (inputStates: States): number => {
 
   const isPatent = ipType === 'patent';
   const isUtility = ipType === 'utility';
+  const isDesignPartExam = ipType === 'design-part-exam';
+  const isDesignAllExam = ipType === 'design-all-exam';
+  const isTradeMark = ipType === 'trademark';
 
   //1. 특허 또는 실용신안 && 출원 비용 경우
   if ((isPatent || isUtility) && processCategory === 'application') {
@@ -35,7 +38,8 @@ export const getTotalFee = (inputStates: States): number => {
       //심사청구료
       if (isRequestForExamination === 'yes') {
         totalFee += 143000;
-        if (claimCount && claimCount > 0) totalFee += 44000 * claimCount;
+        if (rightUnitCount && rightUnitCount > 0)
+          totalFee += 44000 * rightUnitCount;
       }
       if (isPriorityExamination === 'yes') totalFee += 200000;
     }
@@ -49,7 +53,8 @@ export const getTotalFee = (inputStates: States): number => {
       //심사청구료
       if (isRequestForExamination === 'yes') {
         totalFee += 71000;
-        if (claimCount && claimCount > 0) totalFee += 19000 * claimCount;
+        if (rightUnitCount && rightUnitCount > 0)
+          totalFee += 19000 * rightUnitCount;
       }
       if (isPriorityExamination === 'yes') totalFee += 100000;
     }
@@ -59,6 +64,34 @@ export const getTotalFee = (inputStates: States): number => {
         claimForPriorityRightType === 'online'
           ? 2 * 18000 * claimForPriorityRightCount
           : 2 * 20000 * claimForPriorityRightCount;
+    }
+  }
+
+  //2. 디자인 && 출원 비용 경우
+  if (
+    (isDesignAllExam || isDesignPartExam) &&
+    processCategory === 'application' &&
+    rightUnitCount
+  ) {
+    const isOnlineSubmit = submitFormType === 'online';
+    if (isDesignAllExam) {
+      totalFee += isOnlineSubmit
+        ? 94000 * rightUnitCount
+        : 104000 * rightUnitCount;
+    }
+
+    if (isDesignPartExam) {
+      totalFee += isOnlineSubmit
+        ? 45000 * rightUnitCount
+        : 55000 * rightUnitCount;
+    }
+    if (isPriorityExamination === 'yes') totalFee += 70000 * rightUnitCount;
+
+    if (isClaimForPriorityRight === 'yes' && claimForPriorityRightCount) {
+      totalFee +=
+        claimForPriorityRightType === 'online'
+          ? 18000 * claimForPriorityRightCount
+          : 20000 * claimForPriorityRightCount;
     }
   }
 
