@@ -42,6 +42,7 @@ export interface States {
   isClaimForPriorityRight?: keyof typeof YES_OR_NO;
   claimForPriorityRightType?: SubmitFormType;
   claimForPriorityRightCount?: number;
+  examptionCases?: string;
 }
 
 const Home: NextPage = () => {
@@ -61,6 +62,7 @@ const Home: NextPage = () => {
     isClaimForPriorityRight: 'no',
     claimForPriorityRightType: 'online',
     claimForPriorityRightCount: 1,
+    examptionCases: '',
   });
 
   const [isResultOpen, setIsResultOpen] = useState<boolean>(false);
@@ -297,21 +299,20 @@ const Home: NextPage = () => {
           )}
         </Stack>
 
-        {/* <Divider sx={{ my: 3 }}>
+        <Divider sx={{ my: 3 }}>
           <Chip label="4 단계 - 감면사유" />
         </Divider>
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-          <RadioSelector<States['isClaimForPriorityRight']>
-            title="우선권 주장 여부"
-            state={states.isClaimForPriorityRight}
-            setState={(
-              isClaimForPriorityRight: States['isClaimForPriorityRight']
-            ) => setStates({ ...states, isClaimForPriorityRight })}
-            optionListMapper={YES_OR_NO}
-            row
+          <SingleSelector<States['examptionCases']>
+            title="감면사유 선택 - 출원인/권리자"
+            menuItemMapper={EXEMPTION_CASES}
+            state={states.examptionCases}
+            setState={(examptionCases: States['examptionCases']) =>
+              setStates({ ...states, examptionCases })
+            }
           />
-        </Stack> */}
+        </Stack>
       </Stack>
 
       {/* <Fab
@@ -361,3 +362,28 @@ const SUBMIT_FORM_LANGUAGE: Record<Language, string> = {
 };
 
 const YES_OR_NO = { yes: 'Yes', no: 'No' } as const;
+
+const EXEMPTION_CASES = {
+  '100-1': '국민기초생활보장법상 의료급여 수급자',
+  '100-2':
+    '국가유공자와 유족 및 가족, 5·18민주유공자와 유족 및 가족, 고엽제후유증환자·고엽제후유의증환자 및 고엽제후유증 2세환자, 특수임무유공자와 유족, 독립유공자와 유족 및 가족, 참전유공자(본인)',
+  '100-3': '장애인복지법상 등록 장애인',
+  '100-4': '학생[초·중·고의 재학생에 한함]',
+  '100-5': '만 6세 이상 만 19세 미만인 자',
+  '100-6': '군복무중인 일반사병, 사회복무요원, 예술·체육요원, 전환복무수행자',
+
+  '85-1': '만 19세 이상 만30세 미만인 자',
+  '85-2': '만 65세 이상인 자',
+  '70-1': '개인',
+  '70-2': '중소기업',
+
+  '50-1': '중소기업과의 공동연구결과물 출원',
+  '50-2':
+    ' 공공연구 기관(기술의 이전 및 사업화 촉진에 관한 법률에 따른 공공연구기관)',
+  '50-3':
+    '전담조직(기술의 이전 및 사업화 촉진에 관한 법률 제11조 제1항에 따른 전담조직)',
+  '50-4': '지방자치단체',
+
+  '30-1':
+    '중견기업(중견기업 성장촉진 및 경쟁력강화에 관한 특별법에 따른 중견기업)',
+};

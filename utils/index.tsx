@@ -16,6 +16,7 @@ export const getTotalFee = (inputStates: States): number => {
     isClaimForPriorityRight,
     claimForPriorityRightType,
     claimForPriorityRightCount,
+    examptionCases,
   } = inputStates;
   const { designatedItemCount, isAllDesignatedItemsFromPublishedItems } =
     trademark;
@@ -25,6 +26,13 @@ export const getTotalFee = (inputStates: States): number => {
   const isDesignPartExam = ipType === 'design-part-exam';
   const isDesignAllExam = ipType === 'design-all-exam';
   const isTradeMark = ipType === 'trademark';
+
+  const exemptionRate =
+    examptionCases && examptionCases.length > 0
+      ? Number(examptionCases?.split('-')[0]) / 100
+      : 1;
+
+  console.log(exemptionRate);
 
   //1. 특허 또는 실용신안 && 출원 비용 경우
   if ((isPatent || isUtility) && processCategory === 'application') {
@@ -129,6 +137,9 @@ export const getTotalFee = (inputStates: States): number => {
           : 20000 * claimForPriorityRightCount;
     }
   }
+
+  //NOTE:감면 비율 적용(대상 절차인지에 따라 조건부 적용필요)
+  totalFee = totalFee * exemptionRate;
 
   return totalFee;
 };
