@@ -11,11 +11,14 @@ export const getTotalFee = (inputStates: States): number => {
     pageCount,
     isRequestForExamination,
     rightUnitCount,
+    trademark,
     isPriorityExamination,
     isClaimForPriorityRight,
     claimForPriorityRightType,
     claimForPriorityRightCount,
   } = inputStates;
+  const { designatedItemCount, isAllDesignatedItemsFromPublishedItems } =
+    trademark;
 
   const isPatent = ipType === 'patent';
   const isUtility = ipType === 'utility';
@@ -74,18 +77,50 @@ export const getTotalFee = (inputStates: States): number => {
     rightUnitCount
   ) {
     const isOnlineSubmit = submitFormType === 'online';
-    if (isDesignAllExam) {
+    if (isDesignAllExam)
       totalFee += isOnlineSubmit
         ? 94000 * rightUnitCount
         : 104000 * rightUnitCount;
-    }
 
-    if (isDesignPartExam) {
+    if (isDesignPartExam)
       totalFee += isOnlineSubmit
         ? 45000 * rightUnitCount
         : 55000 * rightUnitCount;
-    }
+
     if (isPriorityExamination === 'yes') totalFee += 70000 * rightUnitCount;
+
+    if (isClaimForPriorityRight === 'yes' && claimForPriorityRightCount) {
+      totalFee +=
+        claimForPriorityRightType === 'online'
+          ? 18000 * claimForPriorityRightCount
+          : 20000 * claimForPriorityRightCount;
+    }
+  }
+
+  //3. 상표 && 출원 비용 경우
+  if (
+    isTradeMark &&
+    processCategory === 'application' &&
+    rightUnitCount &&
+    designatedItemCount
+  ) {
+    const isOnlineSubmit = submitFormType === 'online';
+
+    const multiplier = isOnlineSubmit
+      ? isAllDesignatedItemsFromPublishedItems === 'yes'
+        ? 56000
+        : 62000
+      : isAllDesignatedItemsFromPublishedItems === 'yes'
+      ? 66000
+      : 72000;
+
+    totalFee += multiplier * rightUnitCount;
+
+    const additionalFee =
+      designatedItemCount > 20 ? (designatedItemCount - 20) * 2000 : 0;
+    totalFee += additionalFee;
+
+    if (isPriorityExamination === 'yes') totalFee += 160000 * rightUnitCount;
 
     if (isClaimForPriorityRight === 'yes' && claimForPriorityRightCount) {
       totalFee +=

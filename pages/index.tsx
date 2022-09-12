@@ -33,6 +33,10 @@ export interface States {
   isRequestForExamination?: keyof typeof YES_OR_NO;
   //특허와 실용신안은 청구항, 디자인은 디자인, 상품은 상품류가 unit
   rightUnitCount?: number;
+  trademark: {
+    designatedItemCount?: number;
+    isAllDesignatedItemsFromPublishedItems?: keyof typeof YES_OR_NO;
+  };
   isPriorityExamination?: keyof typeof YES_OR_NO;
   isClaimForPriorityRight?: keyof typeof YES_OR_NO;
   claimForPriorityRightType?: SubmitFormType;
@@ -48,6 +52,10 @@ const Home: NextPage = () => {
     pageCount: 20,
     isRequestForExamination: 'yes',
     rightUnitCount: 1,
+    trademark: {
+      designatedItemCount: 20,
+      isAllDesignatedItemsFromPublishedItems: 'yes',
+    },
     isPriorityExamination: 'no',
     isClaimForPriorityRight: 'no',
     claimForPriorityRightType: 'online',
@@ -159,6 +167,50 @@ const Home: NextPage = () => {
               helperText="디자인 수"
             />
           )}
+          {isTradeMark && (
+            <>
+              <InputField<States['rightUnitCount']>
+                label={'상품류구분 수'}
+                state={states.rightUnitCount}
+                setState={(rightUnitCount: States['rightUnitCount']) =>
+                  setStates({ ...states, rightUnitCount })
+                }
+                helperText="상품류구분 수"
+              />
+              <InputField<States['trademark']['designatedItemCount']>
+                label={'지정상품 수'}
+                state={states.trademark.designatedItemCount}
+                setState={(
+                  designatedItemCount: States['trademark']['designatedItemCount']
+                ) =>
+                  setStates({
+                    ...states,
+                    trademark: { ...states.trademark, designatedItemCount },
+                  })
+                }
+                helperText="지정상품 수(20개 초과시 가산금 발생)"
+              />
+              <RadioSelector<
+                States['trademark']['isAllDesignatedItemsFromPublishedItems']
+              >
+                title="모든 지정상품 고시명칭 해당 여부"
+                state={states.trademark.isAllDesignatedItemsFromPublishedItems}
+                setState={(
+                  isAllDesignatedItemsFromPublishedItems: States['trademark']['isAllDesignatedItemsFromPublishedItems']
+                ) =>
+                  setStates({
+                    ...states,
+                    trademark: {
+                      ...states.trademark,
+                      isAllDesignatedItemsFromPublishedItems,
+                    },
+                  })
+                }
+                optionListMapper={YES_OR_NO}
+                row
+              />
+            </>
+          )}
         </Stack>
 
         <Divider sx={{ my: 3 }}>
@@ -190,6 +242,7 @@ const Home: NextPage = () => {
                   helperText="청구항 총 수"
                 />
               )}
+
               <RadioSelector<States['isPriorityExamination']>
                 title="우선심사 여부"
                 state={states.isPriorityExamination}
@@ -228,13 +281,16 @@ const Home: NextPage = () => {
                 optionListMapper={SUBMIT_FORM_TYPE_MAPPER}
                 row
               />
+
               <InputField<States['claimForPriorityRightCount']>
                 label={'우선권 주장 수'}
                 state={states.claimForPriorityRightCount}
                 setState={(
                   claimForPriorityRightCount: States['claimForPriorityRightCount']
                 ) => setStates({ ...states, claimForPriorityRightCount })}
-                helperText="우선권 주장 총 수"
+                helperText={
+                  isTradeMark ? ' 우선권 주장 상품류 수' : '우선권 주장 총 수'
+                }
               />
             </>
           )}
