@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  Box,
   Chip,
   Container,
   Divider,
@@ -90,15 +91,11 @@ const Home: NextPage = () => {
         justifyContent={'center'}
         sx={{ mr: isResultOpen ? `${DRAWER_WIDTH}px` : 0 }}
       >
-        <Typography
-          variant="h3"
-          fontWeight={600}
-          gutterBottom
-          textAlign={'center'}
-          p={5}
-        >
-          지식재산권 비용(관납료) 계산기
-        </Typography>
+        <Box bgcolor={'paleturquoise'} sx={{ m: 3, p: 3 }}>
+          <Typography variant="h3" fontWeight={600} textAlign={'center'}>
+            지식재산권 비용(관납료) 계산기
+          </Typography>
+        </Box>
 
         {/* <Link href="/about" color="secondary">
           Go to the about page
@@ -324,7 +321,7 @@ const Home: NextPage = () => {
         계산결과 확인
       </Fab> */}
 
-      <Typography variant="h3" fontWeight="bold" textAlign="center" mt={10}>
+      <Typography variant={'h3'} fontWeight="bold" textAlign="center" my={10}>
         총 금액: {calculatedResult?.toLocaleString()} 원
       </Typography>
 

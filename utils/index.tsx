@@ -32,8 +32,6 @@ export const getTotalFee = (inputStates: States): number => {
       ? Number(examptionCases?.split('-')[0]) / 100
       : 1;
 
-  console.log(exemptionRate);
-
   //1. 특허 또는 실용신안 && 출원 비용 경우
   if ((isPatent || isUtility) && processCategory === 'application') {
     const isOnlineSubmit = submitFormType === 'online';
