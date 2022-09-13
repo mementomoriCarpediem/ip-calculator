@@ -29,7 +29,9 @@ export const getTotalFee = (inputStates: States): number => {
 
   const exemptionRate =
     examptionCases && examptionCases.length > 0
-      ? Number(examptionCases?.split('-')[0]) / 100
+      ? Number(examptionCases?.split('-')[0]) === 100
+        ? 0
+        : Number(examptionCases?.split('-')[0]) / 100
       : 1;
 
   //1. 특허 또는 실용신안 && 출원 비용 경우
