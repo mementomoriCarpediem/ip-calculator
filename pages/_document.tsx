@@ -17,6 +17,12 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <meta name="emotion-insertion-point" content="" />
+          {/* naverSEO */}
+          <meta
+            name="naver-site-verification"
+            content="49d18b24ae8656e9a16838110a4ce6f93eb4b88d"
+          />
+
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
