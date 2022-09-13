@@ -14,6 +14,7 @@ import CalculateResult, {
   DRAWER_WIDTH,
 } from '../src/CalculateResult/CalculateResult';
 import { getTotalFee } from '../utils';
+import { NextSeo } from 'next-seo';
 
 type IPType =
   | 'patent'
@@ -87,6 +88,21 @@ const Home: NextPage = () => {
 
   return (
     <Container maxWidth="lg">
+      <NextSeo
+        title="지식재산권(ip) 비용 계산기"
+        description="특허(실용신안), 상표, 디자인권의 출원/등록 비용을 계산할 수 있습니다."
+        additionalMetaTags={[
+          {
+            property: 'dc:creator',
+            content: 'Zorba',
+          },
+          {
+            name: 'application-name',
+            content: '지식재산권 비용 계산기(IP-calculator)',
+          },
+        ]}
+      />
+
       <Stack
         justifyContent={'center'}
         sx={{ mr: isResultOpen ? `${DRAWER_WIDTH}px` : 0 }}
