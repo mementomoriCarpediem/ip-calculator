@@ -22,12 +22,16 @@ export default class MyDocument extends Document {
             name="naver-site-verification"
             content="49d18b24ae8656e9a16838110a4ce6f93eb4b88d"
           />
-
           <meta
             name="keywords"
             content="특허,patent,상표,디자인,지식재산권,IP,비용계산,특허비용,출원비용,등록비용"
           />
-
+          {/* 구글 애드센스 */}
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004332159357693"
+            crossOrigin="anonymous"
+          ></script>
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
