@@ -23,6 +23,11 @@ export default class MyDocument extends Document {
             content="49d18b24ae8656e9a16838110a4ce6f93eb4b88d"
           />
 
+          <meta
+            name="keywords"
+            content="특허,patent,상표,디자인,지식재산권,IP,비용계산,특허비용,출원비용,등록비용"
+          />
+
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
