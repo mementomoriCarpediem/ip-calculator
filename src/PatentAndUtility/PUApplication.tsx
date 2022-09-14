@@ -43,14 +43,16 @@ function PUApplication({ states, setStates }: Props) {
           />
 
           {/* <Divider orientation="vertical" flexItem /> */}
-          <InputField<States['pageCount']>
-            label={'페이지 수'}
-            state={states.pageCount}
-            setState={(pageCount: States['pageCount']) =>
-              setStates({ ...states, pageCount })
-            }
-            helperText="명세서, 도면 및 요약서의 총 페이지 수"
-          />
+          {states.submitFormType === 'paper' && (
+            <InputField<States['pageCount']>
+              label={'페이지 수'}
+              state={states.pageCount}
+              setState={(pageCount: States['pageCount']) =>
+                setStates({ ...states, pageCount })
+              }
+              helperText="명세서, 도면 및 요약서의 총 페이지 수"
+            />
+          )}
         </>
       </Stack>
 

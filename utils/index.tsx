@@ -44,9 +44,11 @@ export const getTotalFee = (inputStates: States): number => {
     if (isPatent) {
       // 출원 기본료
       if (isOnlineSubmit) totalFee += isKoreanSubmit ? 46000 : 73000;
-      else totalFee += isKoreanSubmit ? 66000 : 93000;
-      // 출원 가산료
-      if (pageCount && pageCount > 20) totalFee += (pageCount - 20) * 1000;
+      else {
+        totalFee += isKoreanSubmit ? 66000 : 93000;
+        // 출원 가산료
+        if (pageCount && pageCount > 20) totalFee += (pageCount - 20) * 1000;
+      }
 
       //심사청구료
       if (isRequestForExamination === 'yes') {
