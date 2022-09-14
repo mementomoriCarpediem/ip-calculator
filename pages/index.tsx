@@ -185,7 +185,7 @@ const Home: NextPage = () => {
           !isTradeMark ? (
             <>
               <Divider sx={{ my: 3 }}>
-                <Chip label="4 단계 - 감면사유" />
+                <Chip label="감면사유" />
               </Divider>
 
               <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
