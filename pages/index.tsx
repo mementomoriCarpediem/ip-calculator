@@ -19,6 +19,7 @@ import PUApplication from '../src/PatentAndUtility/PUApplication';
 import DApplication from '../src/Design/DApplication';
 import TApplication from '../src/Trademark/TApplication';
 import PURegister from '../src/PatentAndUtility/PURegister';
+import DRegister from '../src/Design/DRegister';
 
 export type IPType =
   | 'patent'
@@ -169,6 +170,10 @@ const Home: NextPage = () => {
 
         {isRegister && isPatentOrUtility && (
           <PURegister states={states} setStates={setStates} />
+        )}
+
+        {isRegister && isDesign && (
+          <DRegister states={states} setStates={setStates} />
         )}
 
         {isIPtypeAndProcessCategory ? (

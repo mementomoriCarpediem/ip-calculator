@@ -207,7 +207,7 @@ const getFeeArrayByIPtypeAndYearToPay = (
         '4~6': [35000],
         '7~9': [70000],
         '10~12': [140000],
-        '13~': [2100000],
+        '13~': [210000],
       };
     case 'design-part-exam':
       return {
