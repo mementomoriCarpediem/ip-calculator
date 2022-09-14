@@ -6,12 +6,13 @@ type Props = {};
 function Footer({}: Props) {
   return (
     <Stack
-      direction="row"
+      direction={{ xs: 'column', md: 'row' }}
       justifyContent={'center'}
       alignItems="center"
       borderTop="1px solid gray"
       width="100%"
       p={2}
+      mt="auto"
     >
       <Typography fontWeight={'bold'} sx={{ mr: 1 }}>
         제안/문의 :

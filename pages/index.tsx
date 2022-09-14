@@ -21,6 +21,7 @@ import TApplication from '../src/Trademark/TApplication';
 import PURegister from '../src/PatentAndUtility/PURegister';
 import DRegister from '../src/Design/DRegister';
 import TRegister from '../src/Trademark/TRegister';
+import Link from 'next/link';
 
 export type IPType =
   | 'patent'
@@ -112,7 +113,7 @@ const Home: NextPage = () => {
     <Container maxWidth="lg">
       <NextSeo
         title="지식재산권(ip) 비용 계산기"
-        description="특허(실용신안), 상표, 디자인권의 출원/등록 비용을 계산할 수 있습니다."
+        description="특허(실용신안), 상표, 디자인권의 출원/등록 비용을 쉽게 계산할 수 있습니다."
         additionalMetaTags={[
           {
             property: 'dc:creator',
@@ -129,14 +130,31 @@ const Home: NextPage = () => {
         justifyContent={'center'}
         sx={{ mr: isResultOpen ? `${DRAWER_WIDTH}px` : 0 }}
       >
-        <Box
-          bgcolor={'paleturquoise'}
+        <Stack
+          bgcolor={'#a7dbef'}
           sx={{ m: 3, p: 3, borderRadius: '1rem' }}
+          spacing={2}
         >
           <Typography variant="h4" fontWeight={600} textAlign={'center'}>
             지식재산권 비용(관납료) 계산기
           </Typography>
-        </Box>
+          <Typography textAlign={'center'}>
+            <span style={{ fontWeight: 'bold' }}>#안내사항: </span>
+            보여지는 합산 금액은{' '}
+            <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+              대리인 수수료
+            </span>
+            를 제외한 특허청에 납부하는 수수료이며, 자세한 수수료 정보는{' '}
+            <Link
+              href={
+                'https://www.patent.go.kr/smart/jsp/ka/menu/fee/main/FeeMain01.do'
+              }
+            >
+              특허로
+            </Link>
+            사이트에서 확인하실 수 있습니다.
+          </Typography>
+        </Stack>
 
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
           <SingleSelector<States['ipType']>
@@ -201,7 +219,7 @@ const Home: NextPage = () => {
             </>
           ) : null
         ) : (
-          <Box flex={1}>
+          <Stack flex={1} minHeight={'35vh'} justifyContent="center">
             <Typography
               textAlign={'center'}
               variant="h5"
@@ -210,7 +228,7 @@ const Home: NextPage = () => {
             >
               지식재산권 종류와 진행절차를 선택해주세요.
             </Typography>
-          </Box>
+          </Stack>
         )}
       </Stack>
 
