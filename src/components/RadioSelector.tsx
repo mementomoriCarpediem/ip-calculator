@@ -23,7 +23,7 @@ function RadioSelector<T>({
   ...props
 }: Props<T>) {
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <FormLabel id={`${title}-radio-buttons-group-label`}>{title}</FormLabel>
       <RadioGroup
         aria-labelledby={`${title}-radio-buttons-group-label`}

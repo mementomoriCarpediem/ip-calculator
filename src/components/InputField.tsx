@@ -10,6 +10,7 @@ type Props<T> = {
 function InputField<T>({ label, state, setState, ...props }: Props<T>) {
   return (
     <TextField
+      fullWidth
       label={label}
       value={state}
       onChange={(e) => {

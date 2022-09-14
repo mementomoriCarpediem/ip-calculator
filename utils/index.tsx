@@ -18,6 +18,7 @@ export const getTotalFee = (inputStates: States): number => {
     claimForPriorityRightCount,
     examptionCases,
     registerYearTypeTopay,
+    trademarkRegisterType,
   } = inputStates;
   const { designatedItemCount, isAllDesignatedItemsFromPublishedItems } =
     trademark;
@@ -147,7 +148,27 @@ export const getTotalFee = (inputStates: States): number => {
 
   //4. 등록 경우
   if (processCategory === 'register') {
-    if (isTradeMark) {
+    if (
+      isTradeMark &&
+      trademarkRegisterType &&
+      rightUnitCount &&
+      designatedItemCount
+    ) {
+      if (trademarkRegisterType === 'extendValidationPeriod') {
+        const additionalFee =
+          designatedItemCount > 20 ? (designatedItemCount - 20) * 2000 : 0;
+
+        totalFee += rightUnitCount * 310000 + additionalFee;
+      } else {
+        console.log(1);
+        const additionalFee =
+          designatedItemCount > 20 ? (designatedItemCount - 20) * 2000 : 0;
+
+        totalFee += rightUnitCount * 211000 + additionalFee;
+      }
+
+      //tax added
+      if (trademarkRegisterType !== 'designatedItemAdd') totalFee += 9120;
     }
 
     if (

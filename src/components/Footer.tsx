@@ -8,16 +8,13 @@ function Footer({}: Props) {
     <Stack
       direction="row"
       justifyContent={'center'}
-      my={2}
-      py={2}
+      alignItems="center"
       borderTop="1px solid gray"
-      position={'absolute'}
-      bottom={0}
-      left={0}
       width="100%"
+      p={2}
     >
       <Typography fontWeight={'bold'} sx={{ mr: 1 }}>
-        제안/문의 :{' '}
+        제안/문의 :
       </Typography>
       <Link href="mailto:carpediem.mementomori.1984@gmail.com">
         carpediem.mementomori.1984@gmail.com

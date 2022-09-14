@@ -20,6 +20,7 @@ import DApplication from '../src/Design/DApplication';
 import TApplication from '../src/Trademark/TApplication';
 import PURegister from '../src/PatentAndUtility/PURegister';
 import DRegister from '../src/Design/DRegister';
+import TRegister from '../src/Trademark/TRegister';
 
 export type IPType =
   | 'patent'
@@ -176,23 +177,29 @@ const Home: NextPage = () => {
           <DRegister states={states} setStates={setStates} />
         )}
 
-        {isIPtypeAndProcessCategory ? (
-          <>
-            <Divider sx={{ my: 3 }}>
-              <Chip label="4 단계 - 감면사유" />
-            </Divider>
+        {isRegister && isTradeMark && (
+          <TRegister states={states} setStates={setStates} />
+        )}
 
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-              <SingleSelector<States['examptionCases']>
-                title="감면사유 선택 - 출원인/권리자"
-                menuItemMapper={EXEMPTION_CASES}
-                state={states.examptionCases}
-                setState={(examptionCases: States['examptionCases']) =>
-                  setStates({ ...states, examptionCases })
-                }
-              />
-            </Stack>
-          </>
+        {isIPtypeAndProcessCategory ? (
+          !isTradeMark ? (
+            <>
+              <Divider sx={{ my: 3 }}>
+                <Chip label="4 단계 - 감면사유" />
+              </Divider>
+
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
+                <SingleSelector<States['examptionCases']>
+                  title="감면사유 선택 - 출원인/권리자"
+                  menuItemMapper={EXEMPTION_CASES}
+                  state={states.examptionCases}
+                  setState={(examptionCases: States['examptionCases']) =>
+                    setStates({ ...states, examptionCases })
+                  }
+                />
+              </Stack>
+            </>
+          ) : null
         ) : (
           <Box flex={1}>
             <Typography
@@ -292,4 +299,13 @@ export const YEARS_TYPE_TO_PAY_MAPPER: Record<
   '7~9': '7 ~ 9 년차',
   '10~12': '10 ~ 12 년차',
   '13~': '13년차 이후',
+};
+
+export const TRADEMARK_REGISTER_TYPE_MAPPER: Record<
+  TrademarkRegisterType,
+  string
+> = {
+  normal: '설정등록',
+  designatedItemAdd: '지정상품 추가 등록',
+  extendValidationPeriod: '존속기간 갱신',
 };
