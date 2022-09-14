@@ -11,6 +11,9 @@ function Footer({}: Props) {
       my={2}
       py={2}
       borderTop="1px solid gray"
+      position={'absolute'}
+      bottom={0}
+      width="100%"
     >
       <Typography fontWeight={'bold'} sx={{ mr: 1 }}>
         제안/문의 :{' '}
