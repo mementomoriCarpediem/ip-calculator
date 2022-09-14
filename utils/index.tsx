@@ -53,6 +53,8 @@ export const getTotalFee = (inputStates: States): number => {
           totalFee += 44000 * rightUnitCount;
       }
       if (isPriorityExamination === 'yes') totalFee += 200000;
+
+      totalFee = totalFee * exemptionRate;
     }
 
     if (isUtility) {
@@ -68,6 +70,8 @@ export const getTotalFee = (inputStates: States): number => {
           totalFee += 19000 * rightUnitCount;
       }
       if (isPriorityExamination === 'yes') totalFee += 100000;
+
+      totalFee = totalFee * exemptionRate;
     }
 
     if (isClaimForPriorityRight === 'yes' && claimForPriorityRightCount) {
@@ -96,6 +100,8 @@ export const getTotalFee = (inputStates: States): number => {
         : 55000 * rightUnitCount;
 
     if (isPriorityExamination === 'yes') totalFee += 70000 * rightUnitCount;
+
+    totalFee = totalFee * exemptionRate;
 
     if (isClaimForPriorityRight === 'yes' && claimForPriorityRightCount) {
       totalFee +=
@@ -137,9 +143,6 @@ export const getTotalFee = (inputStates: States): number => {
           : 20000 * claimForPriorityRightCount;
     }
   }
-
-  //NOTE:감면 비율 적용(대상 절차인지에 따라 조건부 적용필요)
-  totalFee = totalFee * exemptionRate;
 
   return totalFee;
 };
