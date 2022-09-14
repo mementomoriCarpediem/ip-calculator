@@ -1,4 +1,4 @@
-import { States } from '../pages';
+import { IPType, States, YearTypeToPay } from '../pages';
 
 export const getTotalFee = (inputStates: States): number => {
   let totalFee = 0;
@@ -17,6 +17,7 @@ export const getTotalFee = (inputStates: States): number => {
     claimForPriorityRightType,
     claimForPriorityRightCount,
     examptionCases,
+    registerYearTypeTopay,
   } = inputStates;
   const { designatedItemCount, isAllDesignatedItemsFromPublishedItems } =
     trademark;
@@ -144,5 +145,82 @@ export const getTotalFee = (inputStates: States): number => {
     }
   }
 
+  //4. 등록 경우
+  if (processCategory === 'register') {
+    if (isTradeMark) {
+    }
+
+    if (
+      (isPatent || isUtility || isDesignAllExam || isDesignPartExam) &&
+      rightUnitCount &&
+      registerYearTypeTopay
+    ) {
+      const feeArray = getFeeArrayByIPtypeAndYearToPay(ipType);
+
+      if (feeArray) {
+        const feeUnit = feeArray[registerYearTypeTopay];
+
+        if (isPatent || isUtility)
+          if (registerYearTypeTopay === '1~3') {
+            totalFee += (feeUnit[0] + feeUnit[1] * rightUnitCount) * 3;
+          } else {
+            totalFee += feeUnit[0] + feeUnit[1] * rightUnitCount;
+          }
+
+        if (isDesignAllExam || isDesignPartExam)
+          if (registerYearTypeTopay === '1~3') {
+            totalFee += feeUnit[0] * rightUnitCount * 3;
+          } else {
+            totalFee += feeUnit[0] * rightUnitCount;
+          }
+      }
+      totalFee = totalFee * exemptionRate;
+    }
+  }
+
   return totalFee;
+};
+
+const getFeeArrayByIPtypeAndYearToPay = (
+  ipType: IPType
+): Record<typeof YearTypeToPay[number], number[]> | undefined => {
+  switch (ipType) {
+    case 'patent':
+      return {
+        '1~3': [15000, 13000],
+        '4~6': [40000, 22000],
+        '7~9': [100000, 38000],
+        '10~12': [240000, 55000],
+        '13~': [360000, 55000],
+      };
+    case 'utility':
+      return {
+        '1~3': [12000, 4000],
+        '4~6': [25000, 9000],
+        '7~9': [60000, 14000],
+        '10~12': [160000, 20000],
+        '13~': [240000, 20000],
+      };
+    case 'design-all-exam':
+      return {
+        '1~3': [25000],
+        '4~6': [35000],
+        '7~9': [70000],
+        '10~12': [140000],
+        '13~': [2100000],
+      };
+    case 'design-part-exam':
+      return {
+        '1~3': [25000],
+        '4~6': [34000],
+        '7~9': [34000],
+        '10~12': [34000],
+        '13~': [34000],
+      };
+    default:
+      console.error(
+        'getFeeArrayByIPtypeAndYearToPay Error: there is no matched iptype'
+      );
+      break;
+  }
 };

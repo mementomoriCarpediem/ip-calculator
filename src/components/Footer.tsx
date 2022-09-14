@@ -13,6 +13,7 @@ function Footer({}: Props) {
       borderTop="1px solid gray"
       position={'absolute'}
       bottom={0}
+      left={0}
       width="100%"
     >
       <Typography fontWeight={'bold'} sx={{ mr: 1 }}>

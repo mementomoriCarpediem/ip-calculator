@@ -9,28 +9,30 @@ import {
   Typography,
 } from '@mui/material';
 import type { NextPage } from 'next';
-import {
-  Footer,
-  InputField,
-  RadioSelector,
-  SingleSelector,
-} from '../src/components';
+import { Footer, SingleSelector } from '../src/components';
 import CalculateResult, {
   DRAWER_WIDTH,
 } from '../src/CalculateResult/CalculateResult';
 import { getTotalFee } from '../utils';
 import { NextSeo } from 'next-seo';
+import PUApplication from '../src/PatentAndUtility/PUApplication';
+import DApplication from '../src/Design/DApplication';
+import TApplication from '../src/Trademark/TApplication';
+import PURegister from '../src/PatentAndUtility/PURegister';
 
-type IPType =
+export type IPType =
   | 'patent'
   | 'utility'
   | 'design-part-exam'
   | 'design-all-exam'
   | 'trademark';
-type ProcessCategory = 'application';
-// | 'register';
+type ProcessCategory = 'application' | 'register';
 type SubmitFormType = 'paper' | 'online';
 type Language = 'korean' | 'foriegn';
+type TrademarkRegisterType =
+  | 'normal'
+  | 'designatedItemAdd'
+  | 'extendValidationPeriod';
 
 export interface States {
   ipType: IPType | '';
@@ -50,6 +52,9 @@ export interface States {
   claimForPriorityRightType?: SubmitFormType;
   claimForPriorityRightCount?: number;
   examptionCases?: string;
+
+  registerYearTypeTopay?: typeof YearTypeToPay[number];
+  trademarkRegisterType?: TrademarkRegisterType;
 }
 
 const Home: NextPage = () => {
@@ -70,6 +75,8 @@ const Home: NextPage = () => {
     claimForPriorityRightType: 'online',
     claimForPriorityRightCount: 1,
     examptionCases: '',
+    registerYearTypeTopay: '1~3',
+    trademarkRegisterType: 'normal',
   });
 
   const [isResultOpen, setIsResultOpen] = useState<boolean>(false);
@@ -85,258 +92,117 @@ const Home: NextPage = () => {
     setCalculatedResult(getTotalFee(states));
   }, [states]);
 
-  const isPatentOrUtility =
-    states.ipType === 'patent' || states.ipType === 'utility';
+  const isIPtypeAndProcessCategory =
+    states.ipType.length > 0 && states.processCategory.length > 0;
+
+  const isPatent = states.ipType === 'patent';
+  const isUtility = states.ipType === 'utility';
+
+  const isPatentOrUtility = isPatent || isUtility;
   const isDesign =
     states.ipType === 'design-all-exam' || states.ipType === 'design-part-exam';
   const isTradeMark = states.ipType === 'trademark';
 
+  const isApplication = states.processCategory === 'application';
+  const isRegister = states.processCategory === 'register';
+
   return (
-    <>
-      <Container maxWidth="lg">
-        <NextSeo
-          title="지식재산권(ip) 비용 계산기"
-          description="특허(실용신안), 상표, 디자인권의 출원/등록 비용을 계산할 수 있습니다."
-          additionalMetaTags={[
-            {
-              property: 'dc:creator',
-              content: 'Zorba',
-            },
-            {
-              name: 'application-name',
-              content: '지식재산권 비용 계산기(IP-calculator)',
-            },
-          ]}
-        />
+    <Container maxWidth="lg">
+      <NextSeo
+        title="지식재산권(ip) 비용 계산기"
+        description="특허(실용신안), 상표, 디자인권의 출원/등록 비용을 계산할 수 있습니다."
+        additionalMetaTags={[
+          {
+            property: 'dc:creator',
+            content: 'Zorba',
+          },
+          {
+            name: 'application-name',
+            content: '지식재산권 비용 계산기(IP-calculator)',
+          },
+        ]}
+      />
 
-        <Stack
-          justifyContent={'center'}
-          sx={{ mr: isResultOpen ? `${DRAWER_WIDTH}px` : 0 }}
+      <Stack
+        justifyContent={'center'}
+        sx={{ mr: isResultOpen ? `${DRAWER_WIDTH}px` : 0 }}
+      >
+        <Box
+          bgcolor={'paleturquoise'}
+          sx={{ m: 3, p: 3, borderRadius: '1rem' }}
         >
-          <Box bgcolor={'paleturquoise'} sx={{ m: 3, p: 3 }}>
-            <Typography variant="h3" fontWeight={600} textAlign={'center'}>
-              지식재산권 비용(관납료) 계산기
-            </Typography>
-          </Box>
+          <Typography variant="h4" fontWeight={600} textAlign={'center'}>
+            지식재산권 비용(관납료) 계산기
+          </Typography>
+        </Box>
 
-          {/* <Link href="/about" color="secondary">
-          Go to the about page
-        </Link> */}
-
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-            <SingleSelector<States['ipType']>
-              title="지식재산권 선택"
-              menuItemMapper={IP_TYPE_MAPPER}
-              state={states.ipType}
-              setState={(ipType: States['ipType']) =>
-                setStates({ ...states, ipType })
-              }
-            />
-            <SingleSelector<typeof states.processCategory>
-              title="진행절차 선택"
-              menuItemMapper={PROCESS_CATEGORY_MAPPER}
-              state={states.processCategory}
-              setState={(processCategory: States['processCategory']) =>
-                setStates({ ...states, processCategory })
-              }
-            />
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Chip label="1 단계" />
-          </Divider>
-
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-            <RadioSelector<States['submitFormType']>
-              title="서류제출 방법"
-              state={states.submitFormType}
-              setState={(submitFormType: States['submitFormType']) =>
-                setStates({ ...states, submitFormType })
-              }
-              optionListMapper={SUBMIT_FORM_TYPE_MAPPER}
-              row
-            />
-            {isPatentOrUtility && (
-              <>
-                <RadioSelector<States['language']>
-                  title="제출서류 언어"
-                  state={states.language}
-                  setState={(language: States['language']) =>
-                    setStates({ ...states, language })
-                  }
-                  optionListMapper={SUBMIT_FORM_LANGUAGE}
-                  row
-                />
-
-                {/* <Divider orientation="vertical" flexItem /> */}
-                <InputField<States['pageCount']>
-                  label={'페이지 수'}
-                  state={states.pageCount}
-                  setState={(pageCount: States['pageCount']) =>
-                    setStates({ ...states, pageCount })
-                  }
-                  helperText="명세서, 도면 및 요약서의 총 페이지 수"
-                />
-              </>
-            )}
-            {isDesign && (
-              <InputField<States['rightUnitCount']>
-                label={'디자인 수'}
-                state={states.rightUnitCount}
-                setState={(rightUnitCount: States['rightUnitCount']) =>
-                  setStates({ ...states, rightUnitCount })
-                }
-                helperText="디자인 수"
-              />
-            )}
-            {isTradeMark && (
-              <>
-                <InputField<States['rightUnitCount']>
-                  label={'상품류구분 수'}
-                  state={states.rightUnitCount}
-                  setState={(rightUnitCount: States['rightUnitCount']) =>
-                    setStates({ ...states, rightUnitCount })
-                  }
-                  helperText="상품류구분 수"
-                />
-                <InputField<States['trademark']['designatedItemCount']>
-                  label={'지정상품 수'}
-                  state={states.trademark.designatedItemCount}
-                  setState={(
-                    designatedItemCount: States['trademark']['designatedItemCount']
-                  ) =>
-                    setStates({
-                      ...states,
-                      trademark: { ...states.trademark, designatedItemCount },
-                    })
-                  }
-                  helperText="지정상품 수(20개 초과시 가산금 발생)"
-                />
-                <RadioSelector<
-                  States['trademark']['isAllDesignatedItemsFromPublishedItems']
-                >
-                  title="모든 지정상품 고시명칭 해당 여부"
-                  state={
-                    states.trademark.isAllDesignatedItemsFromPublishedItems
-                  }
-                  setState={(
-                    isAllDesignatedItemsFromPublishedItems: States['trademark']['isAllDesignatedItemsFromPublishedItems']
-                  ) =>
-                    setStates({
-                      ...states,
-                      trademark: {
-                        ...states.trademark,
-                        isAllDesignatedItemsFromPublishedItems,
-                      },
-                    })
-                  }
-                  optionListMapper={YES_OR_NO}
-                  row
-                />
-              </>
-            )}
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Chip label="2 단계" />
-          </Divider>
-
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-            {isPatentOrUtility && (
-              <RadioSelector<States['isRequestForExamination']>
-                title="심사청구 여부"
-                state={states.isRequestForExamination}
-                setState={(
-                  isRequestForExamination: States['isRequestForExamination']
-                ) => setStates({ ...states, isRequestForExamination })}
-                optionListMapper={YES_OR_NO}
-                row
-              />
-            )}
-
-            {states.isRequestForExamination === 'yes' && (
-              <>
-                {isPatentOrUtility && (
-                  <InputField<States['rightUnitCount']>
-                    label={'청구항 수'}
-                    state={states.rightUnitCount}
-                    setState={(claimCount: States['rightUnitCount']) =>
-                      setStates({ ...states, rightUnitCount: claimCount })
-                    }
-                    helperText="청구항 총 수"
-                  />
-                )}
-
-                <RadioSelector<States['isPriorityExamination']>
-                  title="우선심사 여부"
-                  state={states.isPriorityExamination}
-                  setState={(
-                    isPriorityExamination: States['isPriorityExamination']
-                  ) => setStates({ ...states, isPriorityExamination })}
-                  optionListMapper={YES_OR_NO}
-                  row
-                />
-              </>
-            )}
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Chip label="3 단계" />
-          </Divider>
-
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-            <RadioSelector<States['isClaimForPriorityRight']>
-              title="우선권 주장 여부"
-              state={states.isClaimForPriorityRight}
-              setState={(
-                isClaimForPriorityRight: States['isClaimForPriorityRight']
-              ) => setStates({ ...states, isClaimForPriorityRight })}
-              optionListMapper={YES_OR_NO}
-              row
-            />
-            {states.isClaimForPriorityRight === 'yes' && (
-              <>
-                <RadioSelector<States['claimForPriorityRightType']>
-                  title="우선권주장 서류 제출 방식"
-                  state={states.claimForPriorityRightType}
-                  setState={(
-                    claimForPriorityRightType: States['claimForPriorityRightType']
-                  ) => setStates({ ...states, claimForPriorityRightType })}
-                  optionListMapper={SUBMIT_FORM_TYPE_MAPPER}
-                  row
-                />
-
-                <InputField<States['claimForPriorityRightCount']>
-                  label={'우선권 주장 수'}
-                  state={states.claimForPriorityRightCount}
-                  setState={(
-                    claimForPriorityRightCount: States['claimForPriorityRightCount']
-                  ) => setStates({ ...states, claimForPriorityRightCount })}
-                  helperText={
-                    isTradeMark ? ' 우선권 주장 상품류 수' : '우선권 주장 총 수'
-                  }
-                />
-              </>
-            )}
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Chip label="4 단계 - 감면사유" />
-          </Divider>
-
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
-            <SingleSelector<States['examptionCases']>
-              title="감면사유 선택 - 출원인/권리자"
-              menuItemMapper={EXEMPTION_CASES}
-              state={states.examptionCases}
-              setState={(examptionCases: States['examptionCases']) =>
-                setStates({ ...states, examptionCases })
-              }
-            />
-          </Stack>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
+          <SingleSelector<States['ipType']>
+            title="지식재산권 선택"
+            menuItemMapper={IP_TYPE_MAPPER}
+            state={states.ipType}
+            setState={(ipType: States['ipType']) =>
+              setStates({ ...states, ipType })
+            }
+          />
+          <SingleSelector<typeof states.processCategory>
+            title="진행절차 선택"
+            menuItemMapper={PROCESS_CATEGORY_MAPPER}
+            state={states.processCategory}
+            setState={(processCategory: States['processCategory']) =>
+              setStates({ ...states, processCategory })
+            }
+          />
         </Stack>
 
-        {/* <Fab
+        {isApplication && isPatentOrUtility && (
+          <PUApplication states={states} setStates={setStates} />
+        )}
+
+        {isApplication && isDesign && (
+          <DApplication states={states} setStates={setStates} />
+        )}
+
+        {isApplication && isTradeMark && (
+          <TApplication states={states} setStates={setStates} />
+        )}
+
+        {isRegister && isPatentOrUtility && (
+          <PURegister states={states} setStates={setStates} />
+        )}
+
+        {isIPtypeAndProcessCategory ? (
+          <>
+            <Divider sx={{ my: 3 }}>
+              <Chip label="4 단계 - 감면사유" />
+            </Divider>
+
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={5}>
+              <SingleSelector<States['examptionCases']>
+                title="감면사유 선택 - 출원인/권리자"
+                menuItemMapper={EXEMPTION_CASES}
+                state={states.examptionCases}
+                setState={(examptionCases: States['examptionCases']) =>
+                  setStates({ ...states, examptionCases })
+                }
+              />
+            </Stack>
+          </>
+        ) : (
+          <Box flex={1}>
+            <Typography
+              textAlign={'center'}
+              variant="h5"
+              fontWeight="bold"
+              sx={{ my: 10 }}
+            >
+              지식재산권 종류와 진행절차를 선택해주세요.
+            </Typography>
+          </Box>
+        )}
+      </Stack>
+
+      {/* <Fab
         variant="extended"
         color="primary"
         sx={{ left: '50%', bottom: 0, transform: 'translate(-50%)', mt: 5 }}
@@ -345,18 +211,16 @@ const Home: NextPage = () => {
         계산결과 확인
       </Fab> */}
 
-        <Typography variant={'h3'} fontWeight="bold" textAlign="center" my={10}>
-          총 금액: {calculatedResult?.toLocaleString()} 원
-        </Typography>
+      <Typography variant={'h3'} fontWeight="bold" textAlign="center" my={10}>
+        총 금액: {calculatedResult?.toLocaleString()} 원
+      </Typography>
 
-        {/* <CalculateResult
+      {/* <CalculateResult
         open={isResultOpen}
         onClose={() => setIsResultOpen(false)}
       /> */}
-      </Container>
-
       <Footer />
-    </>
+    </Container>
   );
 };
 
@@ -370,24 +234,24 @@ const IP_TYPE_MAPPER: Record<IPType, string> = {
   trademark: '상표',
 };
 
-const PROCESS_CATEGORY_MAPPER: Record<ProcessCategory, string> = {
+export const PROCESS_CATEGORY_MAPPER: Record<ProcessCategory, string> = {
   application: '출원',
-  // register: '등록',
+  register: '등록',
 };
 
-const SUBMIT_FORM_TYPE_MAPPER: Record<SubmitFormType, string> = {
+export const SUBMIT_FORM_TYPE_MAPPER: Record<SubmitFormType, string> = {
   paper: '서면',
   online: '전자',
 };
 
-const SUBMIT_FORM_LANGUAGE: Record<Language, string> = {
+export const SUBMIT_FORM_LANGUAGE: Record<Language, string> = {
   korean: '국어',
   foriegn: '외국어',
 };
 
-const YES_OR_NO = { yes: 'Yes', no: 'No' } as const;
+export const YES_OR_NO = { yes: 'Yes', no: 'No' } as const;
 
-const EXEMPTION_CASES = {
+export const EXEMPTION_CASES = {
   '100-1': '국민기초생활보장법상 의료급여 수급자',
   '100-2':
     '국가유공자와 유족 및 가족, 5·18민주유공자와 유족 및 가족, 고엽제후유증환자·고엽제후유의증환자 및 고엽제후유증 2세환자, 특수임무유공자와 유족, 독립유공자와 유족 및 가족, 참전유공자(본인)',
@@ -410,4 +274,17 @@ const EXEMPTION_CASES = {
 
   '30-1':
     '중견기업(중견기업 성장촉진 및 경쟁력강화에 관한 특별법에 따른 중견기업)',
+};
+
+export const YearTypeToPay = ['1~3', '4~6', '7~9', '10~12', '13~'] as const;
+
+export const YEARS_TYPE_TO_PAY_MAPPER: Record<
+  typeof YearTypeToPay[number],
+  string
+> = {
+  '1~3': '최초 등록시',
+  '4~6': '4 ~ 6년차',
+  '7~9': '7 ~ 9 년차',
+  '10~12': '10 ~ 12 년차',
+  '13~': '13년차 이후',
 };
